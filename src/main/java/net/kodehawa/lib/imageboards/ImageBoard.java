@@ -319,8 +319,9 @@ public class ImageBoard<T extends BoardImage> {
         if (search != null) {
             StringBuilder tags = new StringBuilder(search.toLowerCase().trim());
             if(rating != null) {
-                //Fuck you gelbooru you're the only one doing this :(
-                tags.append(" rating:").append(board == DefaultBoards.GELBOORU ? rating.getLongName() : rating.getShortName());
+                // I call cursed.
+                boolean appendLongTag = (board == DefaultBoards.GELBOORU || board == DefaultBoards.R34 || board == DefaultBoards.SAFEBOORU);
+                tags.append(" rating:").append(appendLongTag ? rating.getLongName() : rating.getShortName());
             }
 
             // Why, just, why, why would you return anything but?
@@ -338,7 +339,7 @@ public class ImageBoard<T extends BoardImage> {
             log.debug("Making request to {} (Response format: {}, ImageBoard: {}, Target: {})", url.toString(), responseFormat, board, cls);
             try (ResponseBody body = response.body()) {
                 if (body == null) {
-                    log.warn("Received empty body from a ImageBoard ({})! Returning empty list.", getImageType());
+                    log.debug("Received empty body from a ImageBoard ({})! Returning empty list.", getImageType());
                     return Collections.emptyList();
                 }
 
